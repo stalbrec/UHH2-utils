@@ -6,9 +6,35 @@ e.g. collating statistics about ntuples, manipulating XMLs
 
 ## Installation
 
-
+_TODO_
 
 ## Utilities
+
+### cleanupXML.sh
+
+Removes ROOT files from XML files that are marked as "missing" from running `datasetInfo.py`
+
+### datasetInfo.py
+
+Go through directory of XML files, and save info to CSV file, e.g. user, year, etc.
+
+Also makes list of missing ntuple files.
+
+### findAllNtupleDirs.py
+
+Go through **all** relevant branches of UHH2, collate list of Ntuple directorys & filenames used in each by scanning all XML files.
+
+Also produces map of directory -> XMLs, and list of missing files
+
+_TODO: unify this with datasetInfo.py, lots of overlap_
+
+_Bigger TODO: make into database for easier querying etc?_
+
+### crabKillXMLCheck.py
+
+Check XML against CRAB log & remove files that crab thought were still transferring.
+
+This is necessary if you then use notFinishedLumis.json from crab report, since that will contain jobs that CRAB thought were transferring *even if* they look OK on the T2. This therefore avoids duplicate events.
 
 ### DAGstatus
 
@@ -111,4 +137,6 @@ More on the differences and converting:
 - https://docs.python.org/3/howto/pyporting.html
 
 - http://python-future.org/quickstart.html
+
+One can use the `six` package to help out: https://six.readthedocs.io/
 
