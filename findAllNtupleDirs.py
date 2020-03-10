@@ -124,14 +124,12 @@ def save_list_to_file(this_list, output_filename):
         f.write("\n".join(this_list))
 
 
-def do_legacy_branches(clone_repo, check_missing):
+def do_legacy_branches(check_missing):
     """Handle the UHH2/common/datasets directories for legacy branches"""
     # Setup UHH2 in clean directory avoid any contamination
     deploy_dirname = "UHHCounting"
     if not os.path.isdir(deploy_dirname):
         print("Cloning repo since I can't find an existing clone under", deploy_dirname)
-        clone_repo = True
-    if clone_repo:
         init_repo("https://github.com/UHH2/UHH2.git", deploy_dirname)
     else:
         os.chdir(deploy_dirname)
@@ -203,14 +201,13 @@ def do_legacy_branches(clone_repo, check_missing):
     os.chdir("..")
 
 
-def do_new_branches(clone_repo, check_missing):
+def do_new_branches(check_missing):
     """Handle the 102X and 106X branches: these use UHH2-datasets repo"""
     # Clone UHH2-datasets repo if necessary
     datasets_dirname = 'UHH2-datasets'
     if not os.path.isdir(datasets_dirname):
         print("Cloning repo since I can't find an existing clone under", datasets_dirname)
         clone_repo = True
-    if clone_repo:
         init_repo('https://github.com/UHH2/UHH2-datasets', datasets_dirname)
     else:
         os.chdir(datasets_dirname)
@@ -277,17 +274,22 @@ def do_new_branches(clone_repo, check_missing):
     os.chdir("..")
 
 
-def main(clone_repo=False, check_missing=True):
+def main(check_missing=True):
     t2_example_dir = '/pnfs/desy.de/cms/tier2/'
     if check_missing and not os.path.isdir(t2_example_dir):
         print("Cannot find", t2_example_dir, " - skipping missing file check")
         check_missing = False
 
-    do_legacy_branches(clone_repo, check_missing)
-    do_new_branches(clone_repo, check_missing)
+    do_legacy_branches(check_missing)
+    do_new_branches(check_missing)
 
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--checkMissing',
+                        help='Compile lists of ntuples in XMLs that no longer exist on disk (slow)',
+                        action='store_true')
+    args = parser.parse_args()
+    sys.exit(main(check_missing=args.checkMissing))
