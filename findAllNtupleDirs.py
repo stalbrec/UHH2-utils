@@ -21,6 +21,9 @@ import subprocess
 import uuid
 import shutil
 
+if not hasattr(subprocess, 'check_output'):
+    raise ImportError("subprocess module missing check_output(): you need python 2.7 or newer")
+
 
 # Only check these branch names
 THESE_BRANCHES = [
