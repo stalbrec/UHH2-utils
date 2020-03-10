@@ -108,7 +108,7 @@ def save_list_to_file(this_list, output_filename):
         f.write("\n".join(this_list))
 
 
-def main(clone_repo=False):
+def main(clone_repo=False, check_missing=True):
 
     # Setup UHH2 in clean directory avoid any contamination
     deploy_dirname = "UHHCounting"
@@ -130,6 +130,11 @@ def main(clone_repo=False):
     important_branches = sorted(list(set(our_list_of_branches) & set(list_of_remote_branches)))
     print("Only looking in branches:", important_branches)
 
+    t2_example_dir = '/pnfs/desy.de/cms/tier2/'
+    if check_missing and not os.path.isdir(t2_example_dir):
+        print("Cannot find", t2_example_dir, " - skipping missing file check")
+        check_missing = False
+
     for remote_branch in important_branches[:]:
         all_root_files = []
         remote_branch = remote_branch.lstrip(REMOTE_NAME+"/")
@@ -141,20 +146,21 @@ def main(clone_repo=False):
             all_root_files.extend(l)
 
         # Write missing files to file
-        print("Doing missing files")
-        missing_counter = 0
-        with open("../%s_missing.txt" % remote_branch, "w") as f:
-            for xf in xml_files:
-                first_time = True
-                these_root_files = get_root_files_from_xml(xf)
-                for rf in these_root_files:
-                    if not os.path.isfile(rf):
-                        missing_counter += 1
-                        if first_time:
-                            f.write(xf + "::\n")
-                            first_time = False
-                        f.write(rf + "\n")
-        print("# Missing files:", missing_counter)
+        if check_missing:
+            print("Doing missing files")
+            missing_counter = 0
+            with open("../%s_missing.txt" % remote_branch, "w") as f:
+                for xf in xml_files:
+                    first_time = True
+                    these_root_files = get_root_files_from_xml(xf)
+                    for rf in these_root_files:
+                        if not os.path.isfile(rf):
+                            missing_counter += 1
+                            if first_time:
+                                f.write(xf + "::\n")
+                                first_time = False
+                            f.write(rf + "\n")
+            print("# Missing files:", missing_counter)
 
         all_root_files = sorted(list(set(all_root_files)))
         file_log_filename = "ntuple_filenames_"+remote_branch+".txt"
@@ -165,7 +171,7 @@ def main(clone_repo=False):
         dir_log_filename = "ntuple_dirnames_"+remote_branch+".txt"
         save_list_to_file(all_root_files_dirs, "../"+dir_log_filename)  # use .. as we're in the UHH repo
         print("Found", len(all_root_files_dirs), "ntuple dirs, list saved to", dir_log_filename)
-        
+
         # Write map of dirname -> XMLs
         print("Doing dir map")
         these_root_dirs_lists = [sorted(list(set([remove_crab_dir(os.path.dirname(r)) for r in rfl]))) for rfl in these_root_files_lists]
