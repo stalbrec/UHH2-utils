@@ -211,7 +211,7 @@ def do_new_branches(clone_repo, check_missing):
         print("Cloning repo since I can't find an existing clone under", datasets_dirname)
         clone_repo = True
     if clone_repo:
-        init_repo('https://github.com/UHH2/UHH2-datasets/', datasets_dirname)
+        init_repo('https://github.com/UHH2/UHH2-datasets', datasets_dirname)
     else:
         os.chdir(datasets_dirname)
     checkout_branch('master', 'master')
@@ -219,7 +219,7 @@ def do_new_branches(clone_repo, check_missing):
 
     # Instead of iterating through branches, we iterate through directories,
     # each of which corresponds to a release
-    releases = [x for x in os.listdir() if os.path.isdir(x) and 'RunII' in x]
+    releases = [x for x in os.listdir('.') if os.path.isdir(x) and 'RunII' in x]
     print('Considering', releases, 'in UHH2-datasets')
     for release in releases:
         # Do usual finding of XML files, check missing, save to txt files
