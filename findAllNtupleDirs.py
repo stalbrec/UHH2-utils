@@ -24,15 +24,15 @@ import shutil
 
 # Only check these branch names
 THESE_BRANCHES = [
-    # "RunII_102X_v2",
-    "RunII_102X_v1",
+    # "RunII_102X_v2",  # these are now stored in uhh2-datasets repo, do separately
+    # "RunII_102X_v1",
     "RunII_101_v1",
-    # "RunII_94X_v3",
-    # "RunII_94X_v2",
-    # "RunII_94X_v1",
-    # "RunII_80X_v5",
-    # "RunII_80X_v4",
-    # "RunII_80X_v3",
+    "RunII_94X_v3",
+    "RunII_94X_v2",
+    "RunII_94X_v1",
+    "RunII_80X_v5",
+    "RunII_80X_v4",
+    "RunII_80X_v3",
 ]
 
 
@@ -112,6 +112,9 @@ def main(clone_repo=False):
 
     # Setup UHH2 in clean directory avoid any contamination
     deploy_dirname = "UHHCounting"
+    if not os.path.isdir(deploy_dirname):
+        print("Cloning repo since I can't find an existing clone under", deploy_dirname)
+        clone_repo = True
     if clone_repo:
         init_repo("https://github.com/UHH2/UHH2.git", deploy_dirname)
     else:
