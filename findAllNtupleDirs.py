@@ -200,6 +200,7 @@ def do_legacy_branches(clone_repo, check_missing):
                 for ind, rdl in enumerate(these_root_dirs_lists):
                     if rd in rdl:
                         f.write("\t" + xml_files[ind].lstrip("common/datasets/") + "\n")
+    os.chdir("..")
 
 
 def do_new_branches(clone_repo, check_missing):
@@ -246,7 +247,7 @@ def do_new_branches(clone_repo, check_missing):
                             f.write(rf + "\n")
             print("# Missing files:", missing_counter)
 
-        # Write list of all directory names
+        # Write list of all filenames
         all_root_files = sorted(list(set(all_root_files)))
         file_log_filename = "ntuple_filenames_"+release+".txt"
         # use .. as we're in the UHH repo
@@ -272,6 +273,8 @@ def do_new_branches(clone_repo, check_missing):
                 for ind, rdl in enumerate(these_root_dirs_lists):
                     if rd in rdl:
                         f.write("\t" + xml_files[ind].lstrip("common/datasets/") + "\n")
+
+    os.chdir("..")
 
 
 def main(clone_repo=False, check_missing=True):
