@@ -13,25 +13,25 @@ _TODO_
 
 The following 4 scripts are to tackle the missing files from the broken dCache drive. They figure out the runs & lumisections in the "bad" files, and create a JSON mask for them, to be using in a CRAB config (e.g. `crab_template.py`).
 
-## commentOutBadXML.sh
+### commentOutBadXML.sh
 
 Create a copy of a XML file, commenting out ntuples listed in a plain txt file
 
-## xmlToTxt.sh
+### xmlToTxt.sh
 
 Convert XML file of ntuples to plain text file of them, ignoring any commented-out lines
 
-## dump_lumilist.C
+### dump_lumilist.C
 
 ROOT script to save all the run numbers & lumisections in ntuple(s) to JSON. Can either accept a filepath (with globbing), or a text file with a list of Ntuple filenames.
 The lumi JSON can then be used with the standard lumilist tools: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGoodLumiSectionsJSONFile
 
-## splitGoldenJSONbyRunPeriod.sh
+### splitGoldenJSONbyRunPeriod.sh
 
 Download Golden JSON for a chosen year, and split it into individual JSON files for each run period.
 
 
-### Re-processing of missing lumis
+#### Re-processing of missing lumis
 
 1. Create XML excluding missing ntuples:
 
