@@ -26,6 +26,11 @@ Convert XML file of ntuples to plain text file of them, ignoring any commented-o
 ROOT script to save all the run numbers & lumisections in ntuple(s) to JSON. Can either accept a filepath (with globbing), or a text file with a list of Ntuple filenames.
 The lumi JSON can then be used with the standard lumilist tools: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGoodLumiSectionsJSONFile
 
+### splitAndDumpLumiList.sh
+
+Script to run dump_lumilist over large lists of files, by dividing into jobs of 1000, and running these in parallel.
+Expects file with list of files to end in .txt, can then use mergeJSON.py to combine the results.
+
 ### splitGoldenJSONbyRunPeriod.sh
 
 Download Golden JSON for a chosen year, and split it into individual JSON files for each run period.
@@ -52,6 +57,8 @@ makes `X_nobad.xml`
 ```
 root -q -b 'dump_lumilist.C("X_nobad.txt","lumilist_X_nobad.json")'
 ```
+
+Can use `splitAndDumpLumiList.sh X_nobad.txt lumilist_X_nobad.json` instead to split into parallel processes.
 
 4. Only for **data**: if not already done, create Golden JSON per Run period:
 
