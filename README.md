@@ -10,6 +10,65 @@ _TODO_
 
 ## Utilities
 
+
+The following 4 scripts are to tackle the missing files from the broken dCache drive. They figure out the runs & lumisections in the "bad" files, and create a JSON mask for them, to be using in a CRAB config (e.g. `crab_template.py`).
+
+## commentOutBadXML.sh
+
+Create a copy of a XML file, commenting out ntuples listed in a plain txt file
+
+## xmlToTxt.sh
+
+Convert XML file of ntuples to plain text file of them, ignoring any commented-out lines
+
+## dump_lumilist.C
+
+ROOT script to save all the run numbers & lumisections in ntuple(s) to JSON. Can either accept a filepath (with globbing), or a text file with a list of Ntuple filenames.
+The lumi JSON can then be used with the standard lumilist tools: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGoodLumiSectionsJSONFile
+
+## splitGoldenJSONbyRunPeriod.sh
+
+Download Golden JSON for a chosen year, and split it into individual JSON files for each run period.
+
+
+### Re-processing of missing lumis
+
+1. Create XML excluding missing ntuples:
+
+```
+./commentOutBadXML.sh <XML filename> <list of missing ntuples>
+```
+
+makes `X_nobad.xml`
+
+2. Convert that into plain txt:
+
+```
+./xmlToTxt.sh X_nobad.xml X_nobad.txt
+```
+
+3. Create lumilist from txt file:
+
+```
+root -q -b 'dump_lumilist.C("X_nobad.txt","lumilist_X_nobad.json")'
+```
+
+4. Only for **data**: if not already done, create Golden JSON per Run period:
+
+```
+./splitGoldenJSONbyRunPeriod.sh 2016
+```
+
+Then diff Golden JSON & list of "good" json, e.g.:
+
+```
+compareJSON.py --sub Golden_2016_RunA.json lumilist_X_nobad.json missing_2016_RunA.json
+```
+
+You can then use `missing_2016_RunA.json` in your `crab_template` in the `config.Data.lumiMask` attribute.
+
+NB not done yet for MC
+
 ### cleanupXML.sh
 
 Removes ROOT files from XML files that are marked as "missing" from running `datasetInfo.py`
