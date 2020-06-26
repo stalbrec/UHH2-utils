@@ -37,10 +37,13 @@ def write_lumi_list(inputDataset="/QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8/RunII
         raise BaseException("the given inputDataset DAS string corresponds to more than two samples. This is a bit unusual.")
 
     else:
-        results[results.keys()[0]].writeJSON(fileName=filename)
-        if(len(results.keys())>1):
+        result_keys = results.keys()
+        if("ext" in result_keys[0]):
+            result_keys = list(reversed(result_keys))
+        results[result_keys[0]].writeJSON(fileName=filename)
+        if(len(result_keys)>1):
             #if there are two results assume its nominal+ext sample:
-            results[results.keys()[1]].writeJSON(fileName=filename.replace('.json','_ext.json'))
+            results[result_keys[1]].writeJSON(fileName=filename.replace('.json','_ext.json'))
     
 if __name__=="__main__":
     write_lumi_list()
